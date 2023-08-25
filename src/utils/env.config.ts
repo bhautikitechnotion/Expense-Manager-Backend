@@ -6,7 +6,7 @@ interface Config {
 }
 
 const envSettings: Config = {
-    serverPort: process.env.SERVER_PORT
+    serverPort: process.env.SERVER_PORT,
 };
 
 export { envSettings }
