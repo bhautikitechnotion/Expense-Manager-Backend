@@ -1,0 +1,31 @@
+{
+    "name": "expense-manager-backend",
+    "version": "1.0.0",
+    "description": "Expense manager backend ",
+    "main": "index.js",
+    "scripts": {
+        "start:dev": "nodemon",
+        "start:prod": "node -r ts-node/register/transpile-only -r tsconfig-paths/register ./dist/src/index.js",
+        "build": "tsc -p tsconfig.prod.json",
+        "prepare": "husky install",
+        "formatCode": "npx prettier . --write"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/iambhautik/Expense-Manager-Backend.git"
+    },
+    "author": "Bhautik Gajera",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/iambhautik/Expense-Manager-Backend/issues"
+    },
+    "homepage": "https://github.com/iambhautik/Expense-Manager-Backend#readme",
+    "devDependencies": {
+        "nodemon": "^3.0.1",
+        "prettier": "^3.0.2",
+        "ts-node": "^10.9.1",
+        "tsconfig-paths": "^4.2.0",
+        "typescript": "^5.2.2",
+        "husky": "^8.0.0"
+    }
+}
