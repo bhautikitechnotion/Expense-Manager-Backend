@@ -2,6 +2,8 @@ import express, { Application } from 'express';
 import { envSettings } from '@src/utils/env.config';
 import cors from 'cors';
 import helmet from 'helmet';
+import { connectToDb } from './connections';
+import userRouter from './services/user/routes';
 
 if (!envSettings.serverPort) {
     process.exit(1);
@@ -14,8 +16,10 @@ app.use(helmet());
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: false }));
 
+app.use('/user', userRouter)
 
-
-app.listen(envSettings.serverPort, () => {
+app.listen(envSettings.serverPort, async () => {
     console.log(`Connecting to server at port ${envSettings.serverPort}`)
+
+    await connectToDb()
 })
