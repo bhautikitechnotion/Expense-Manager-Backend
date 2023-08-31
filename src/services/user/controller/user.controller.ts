@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { isRegisteredEmail, userRegisterModal } from '../modal/user.modal';
+import { isRegisteredEmail, userRegisterModal, userUpdateModal } from '../modal/user.modal';
 import { encryptPassword } from '@src/utils';
 import { resMsg } from '@src/utils/response.messages';
 
@@ -40,3 +40,29 @@ export const userRegister = async (req: Request, res: Response): Promise<Respons
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 };
+
+export const userUpdate = async (req: Request, res: Response): Promise<Response<ReturnResponse>> => {
+    try {
+        const { body = {}, params = {} } = req;
+
+        const { full_name, email } = body;
+        const { userId } = params;
+
+        const { success: registeredEmailSuccess } = await isRegisteredEmail(email);
+
+        if (!registeredEmailSuccess) {
+            return res.send({ message: resMsg.USER_NOT_REGISTERED, data: [], success: false });
+        }
+
+        const new_body: {full_name: string, email: string, id: string} = {full_name, email, id: userId}
+
+        const {update: userUpdateSuccess, data: userUpdateData} = await userUpdateModal(new_body)
+
+        if(userUpdateSuccess){
+            return res.status(200).send({ message: resMsg.USER_UPDATED_SUCCESSFUL, data: userUpdateData, success: true });
+        }
+        return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
+    } catch (err: any) {
+        return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
+    }
+}
