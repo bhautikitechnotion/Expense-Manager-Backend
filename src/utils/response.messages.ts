@@ -23,4 +23,9 @@ export const resMsg = {
     SUB_CATEGORY_UPDATED_SUCCESSFUL: 'Sub category updated successfully',
     SUB_CATEGORY_DELETED_SUCCESSFUL: 'Sub category deleted successfully',
     SUB_CATEGORY_NOT_FOUND: 'Sub category not found',
+
+    // EXPENSES SPECIFIC MESSAGE
+    EXPENSES_CREATED_SUCCESSFUL: 'Expense added successfully',
+    EXPENSES_UPDATES_SUCCESSFUL: 'Expense updated successfully',
+    EXPENSES_DELETED_SUCCESSFUL: 'Expense deleted successfully',
 };
