@@ -1,6 +1,6 @@
 import { resMsg } from '@src/utils/response.messages';
 import { Request, Response } from 'express';
-import { createCategoryModal, deleteCategoryModal } from '../modal/category.modal';
+import { createCategoryModal, deleteCategoryModal, getAllCategoriesModal } from '../modal/category.modal';
 import { isValidMongoId } from '@src/utils';
 
 interface ReturnResponse {
@@ -51,5 +51,20 @@ export const deleteCategory = async (req: Request, res: Response): Promise<Respo
     } catch (error) {
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
         
+    }
+}
+
+export const getAllCategories = async (req: Request, res: Response): Promise<Response<ReturnResponse>>  => {
+    try {
+
+        const { success: getAllCategorySuccess, data: allCategoriesData} = await getAllCategoriesModal()
+
+        if(getAllCategorySuccess){
+            return res.status(200).send({ message: resMsg.RECORDS_AVAILABLE, data: allCategoriesData, success: true });
+        }
+        
+        return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
+    } catch (error) {
+        return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 }

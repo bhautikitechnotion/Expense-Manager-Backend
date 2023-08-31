@@ -7,6 +7,20 @@ export const isValidObject = (obj: any): boolean => {
     return obj && Object.keys(obj).length > 0;
 };
 
+export const isValidArray = (arr: any): boolean => {
+    return arr && Array.isArray(arr) && arr.length > 0;
+}
+
+export const isValidURL = (url: any): boolean => {
+    var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
+        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+        '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+    return !!pattern.test(url);
+}
+
 export const currentIso = () => new Date().toISOString();
 
 export const uri: any = envSettings.uri;

@@ -1,5 +1,5 @@
 import { collections } from '@src/connections/connections';
-import { currentIso, isValidObject, objectId } from '@src/utils';
+import { currentIso, isValidArray, isValidObject, objectId } from '@src/utils';
 import { InsertOneResult, ModifyResult } from 'mongodb';
 
 interface ReturnResponse {
@@ -50,6 +50,36 @@ export const deleteCategoryModal = async (categoryId: string): Promise<ReturnRes
 
             resolve({ update: false, data: []})
 
+        } catch (error: any) {
+            reject(error);
+        }
+    })
+}
+
+export const getAllCategoriesModal = async (): Promise<ReturnResponse> => {
+    return await new Promise(async (resolve, reject) => {
+        try {
+
+            const aggregateQuery = [
+                {
+                    $match: { is_deleted: false }
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        name: 1,
+                        is_deleted: 1
+                    }
+                }
+            ]
+
+            const res = await collections.categoryCollection?.aggregate(aggregateQuery).toArray()
+
+            if(isValidArray(res)){
+                resolve({ success: true, data: res})
+            }
+
+            resolve({ success: false, data: []})
         } catch (error: any) {
             reject(error);
         }

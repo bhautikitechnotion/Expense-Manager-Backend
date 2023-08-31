@@ -1,6 +1,7 @@
 export const resMsg = {
     // GLOBAL MESSAGE
     SOMETHING_WENT_WRONG: 'Something went wrong!',
+    RECORDS_AVAILABLE: 'Records available',
 
     // USER SPECIFIC MESSAGE
     ALREADY_USER_REGISTERED: 'User already registered with this email',
