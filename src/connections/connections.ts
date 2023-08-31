@@ -5,4 +5,5 @@ export const collections: {
     categoryCollection?: Collection;
     subCategoryCollection?: Collection;
     expensesCollection?: Collection;
+    paymentsCollection?: Collection;
 } = {};

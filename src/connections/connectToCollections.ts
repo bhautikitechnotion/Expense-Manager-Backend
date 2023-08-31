@@ -1,5 +1,5 @@
 import { Collection, Db } from 'mongodb';
-import { CATEGORIES, EXPENSES, SUB_CATEGORIES, USERS } from './collections.name';
+import { CATEGORIES, EXPENSES, PAYMENTS, SUB_CATEGORIES, USERS } from './collections.name';
 import { collections } from './connections';
 
 export const ConnectToCollections = async (dataBase: Db) => {
@@ -7,9 +7,11 @@ export const ConnectToCollections = async (dataBase: Db) => {
     const categoryCollection: Collection = dataBase.collection(CATEGORIES);
     const subCategoryCollection: Collection = dataBase.collection(SUB_CATEGORIES);
     const expensesCollection: Collection = dataBase.collection(EXPENSES);
+    const paymentsCollection: Collection = dataBase.collection(PAYMENTS);
 
     collections.userCollection = userCollection;
     collections.categoryCollection = categoryCollection;
     collections.subCategoryCollection = subCategoryCollection;
     collections.expensesCollection = expensesCollection;
+    collections.paymentsCollection = paymentsCollection;
 };
