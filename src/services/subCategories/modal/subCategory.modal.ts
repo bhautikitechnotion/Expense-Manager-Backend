@@ -1,3 +1,4 @@
+import { CATEGORIES, SUB_CATEGORIES } from '@src/connections/collections.name';
 import { collections } from '@src/connections/connections';
 import { currentIso, isValidArray, objectId } from '@src/utils';
 import { InsertOneResult } from 'mongodb';
@@ -96,5 +97,49 @@ export const getSubCategoryByIdModal = async (id: string): Promise<ReturnRespons
          reject(error);   
         }
 
+    })
+}
+
+export const getSubCategoryListByMainCategoryModal = async (id: string) => {
+    return await new Promise<ReturnResponse>( async (resolve, reject) => {
+        try {
+
+            const query = [
+                {
+                    $match: { _id: objectId(id), is_deleted: false}
+                },
+                {
+                    $lookup: {
+                        from: SUB_CATEGORIES,
+                        localField: '_id',
+                        foreignField: 'main_category_id',
+                        as: 'sub_category'
+                    }
+                },
+                {
+                    $project:{
+                        _id: 1,
+                        name: 1,
+                        sub_category: {
+                            _id: 1,
+                            sub_category_name: 1,
+                            main_category_id: 1,
+
+                        }
+                    }
+                }
+            ]
+
+            const res = await collections.categoryCollection?.aggregate(query).toArray()
+            
+            if(isValidArray(res)) {
+                resolve({ success: true, data: res })
+            }
+
+            resolve({ success: false, data: [] })
+
+        } catch (error: any) {
+            reject(error);   
+        }
     })
 }
