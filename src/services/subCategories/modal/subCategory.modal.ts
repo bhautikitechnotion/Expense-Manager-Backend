@@ -1,7 +1,7 @@
 import { CATEGORIES, SUB_CATEGORIES } from '@src/connections/collections.name';
 import { collections } from '@src/connections/connections';
 import { currentIso, isValidArray, objectId } from '@src/utils';
-import { InsertOneResult } from 'mongodb';
+import { Document, InsertOneResult } from 'mongodb';
 
 interface ReturnResponse {
     update?: boolean;

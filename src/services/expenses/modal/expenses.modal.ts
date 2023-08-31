@@ -1,6 +1,6 @@
 import { collections } from '@src/connections/connections';
-import { currentIso, objectId } from '@src/utils';
-import { InsertOneResult } from 'mongodb';
+import { currentIso, isValidObject, objectId } from '@src/utils';
+import { InsertOneResult, ModifyResult } from 'mongodb';
 
 interface ReturnResponse {
     update?: boolean;
@@ -49,3 +49,22 @@ export const createNewExpenseModal = async (body: CreateNewExpense): Promise<Ret
         }
     })
 };
+
+export const deleteAExpenseModal = async (expense_id: string): Promise<ReturnResponse>  => {
+    return await new Promise( async (resolve, reject) => {
+        try {
+            const res = await collections.expensesCollection?.findOneAndUpdate({ _id: objectId(expense_id), is_deleted: false }, { $set: { is_deleted: true }}, { returnDocument: "after" }) as ModifyResult
+
+            const { value } = res;
+
+            if(isValidObject(value)) {
+                resolve({ success: true, data: []})
+            }
+
+            resolve({ success: false, data: []})
+
+        } catch (error) {
+            reject(error);
+        }
+    })
+}

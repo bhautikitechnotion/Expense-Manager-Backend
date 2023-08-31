@@ -1,7 +1,7 @@
 import { isValidMongoId } from '@src/utils';
 import { resMsg } from '@src/utils/response.messages';
 import { Request, Response } from 'express';
-import { createNewExpenseModal } from '../modal/expenses.modal';
+import { createNewExpenseModal, deleteAExpenseModal } from '../modal/expenses.modal';
 
 interface ReturnResponse {
     message: string;
@@ -42,3 +42,25 @@ export const createNewExpense = async (req: Request, res: Response): Promise<Res
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, success: false, data: [] });
     }
 };
+
+export const deleteAExpense = async (req: Request, res: Response): Promise<Response<ReturnResponse>> => {
+    try {
+
+        const { params = {}} = req
+        const { expense_id } = params; 
+
+        if(!isValidMongoId(expense_id)){
+            return res.status(200).send({ message: resMsg.SOMETHING_WENT_WRONG, success: false, data: [] });
+        }
+
+        const { success, data } = await deleteAExpenseModal(expense_id)
+
+        if(success){
+            return res.status(200).send({ message: resMsg.EXPENSES_DELETED_SUCCESSFUL, success: true, data: data });
+        }
+
+        return res.status(200).send({ message: resMsg.SOMETHING_WENT_WRONG, success: false, data: [] });
+    } catch (error) {
+        return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, success: false, data: [] });
+    }
+}
