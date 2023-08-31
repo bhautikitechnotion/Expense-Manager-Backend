@@ -1,5 +1,5 @@
 import { collections } from '@src/connections/connections';
-import { currentIso, objectId } from '@src/utils';
+import { currentIso, isValidArray, objectId } from '@src/utils';
 import { InsertOneResult } from 'mongodb';
 
 interface ReturnResponse {
@@ -37,3 +37,36 @@ export const createNewSubCategoryModal = async (body: CreateSubCategory): Promis
         }
     });
 };
+
+export const getAllSubCategoriesModal = async (): Promise<ReturnResponse> => {
+    return await new Promise<ReturnResponse>( async (resolve, reject) => {
+        try {
+
+            const query = [
+                {
+                    $match: {
+                        is_delete: false,
+                    }
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        sub_category_name: 1,
+                        main_category_id: 1,
+                        is_delete: 1
+                    }
+                }
+            ]
+
+            const res = await collections.subCategoryCollection?.aggregate(query).toArray()
+
+            if(isValidArray(res)){
+                resolve({ success: true, data: res})
+            }
+            
+            resolve({ success: false, data: []})
+        } catch (error: any) {
+            reject(error);
+        }
+    })
+}

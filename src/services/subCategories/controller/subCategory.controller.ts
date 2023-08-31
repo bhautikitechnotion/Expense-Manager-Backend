@@ -1,7 +1,7 @@
 import { isValidMongoId } from '@src/utils';
 import { resMsg } from '@src/utils/response.messages';
 import { Request, Response } from 'express';
-import { createNewSubCategoryModal } from '../modal/subCategory.modal';
+import { createNewSubCategoryModal, getAllSubCategoriesModal } from '../modal/subCategory.modal';
 
 interface ReturnResponse {
     message: string;
@@ -35,3 +35,20 @@ export const createNewSubCategory = async (req: Request, res: Response): Promise
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 };
+
+
+export const getAllSubCategories = async (req: Request, res: Response): Promise<Response<ReturnResponse>> => {
+    try {
+        
+
+        const { success, data } = await getAllSubCategoriesModal()
+
+        if(success){
+            return res.status(200).send({ message: resMsg.RECORDS_AVAILABLE, data: data, success: true });
+        }
+
+        return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
+    } catch (error) {
+        return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
+    }
+}
