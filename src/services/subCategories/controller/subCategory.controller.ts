@@ -1,7 +1,11 @@
 import { isValidMongoId } from '@src/utils';
 import { resMsg } from '@src/utils/response.messages';
 import { Request, Response } from 'express';
-import { createNewSubCategoryModal, getAllSubCategoriesModal } from '../modal/subCategory.modal';
+import {
+    createNewSubCategoryModal,
+    getAllSubCategoriesModal,
+    getSubCategoryByIdModal,
+} from '../modal/subCategory.modal';
 
 interface ReturnResponse {
     message: string;
@@ -48,6 +52,29 @@ export const getAllSubCategories = async (req: Request, res: Response): Promise<
         }
 
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
+    } catch (error) {
+        return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
+    }
+}
+
+export const getSubCategoryById = async (req: Request, res: Response): Promise<Response<ReturnResponse>> => {
+    try {
+
+        const { params } = req;
+        const { sub_category_id } = params
+
+        if(!isValidMongoId(sub_category_id)){
+            return res.status(200).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
+        }
+
+        const {success, data} = await getSubCategoryByIdModal(sub_category_id)
+
+        if(success){
+            return res.status(200).send({ message: resMsg.RECORDS_AVAILABLE, data: data, success: true });
+        }
+
+
+        return res.status(200).send({ message: resMsg.RECORDS_NOT_FOUND, data: [], success: false });
     } catch (error) {
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }

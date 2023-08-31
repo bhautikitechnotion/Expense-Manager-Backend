@@ -70,3 +70,31 @@ export const getAllSubCategoriesModal = async (): Promise<ReturnResponse> => {
         }
     })
 }
+
+export const getSubCategoryByIdModal = async (id: string): Promise<ReturnResponse> => {
+    return await new Promise<ReturnResponse>( async (resolve, reject) => {
+        try {
+            
+            const query = [
+                {
+                    $match: { _id: objectId(id), is_delete: false },
+                },
+                {
+                    $project: { _id: 1, sub_category_name: 1, main_category_id: 1  }
+                }
+            ]
+
+            const res = await collections.subCategoryCollection?.aggregate(query).toArray()
+            
+            if(isValidArray(res)){
+                resolve({ success: true, data: res })
+            }
+            
+            resolve({ success: false, data: [] })
+            
+        } catch (error: any) {
+         reject(error);   
+        }
+
+    })
+}
