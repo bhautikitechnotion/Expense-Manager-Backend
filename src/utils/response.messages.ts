@@ -28,4 +28,9 @@ export const resMsg = {
     EXPENSES_CREATED_SUCCESSFUL: 'Expense added successfully',
     EXPENSES_UPDATES_SUCCESSFUL: 'Expense updated successfully',
     EXPENSES_DELETED_SUCCESSFUL: 'Expense deleted successfully',
+
+    // PAYMENTS SPECIFIC MESSAGE
+    PAYMENTS_CREATED_SUCCESSFUL: 'Payment method added successfully',
+    PAYMENTS_UPDATES_SUCCESSFUL: 'Payment method updated successfully',
+    PAYMENTS_DELETED_SUCCESSFUL: 'Payment method deleted successfully',
 };
