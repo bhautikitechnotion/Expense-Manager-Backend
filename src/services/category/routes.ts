@@ -1,11 +1,12 @@
 import express from 'express';
-import { createCategory, deleteCategory, getAllCategories } from './controller/category.controller';
+import { createCategory, deleteCategory, getAllCategories, getCategoryById } from './controller/category.controller';
 
 const categoryRouter = express.Router();
 
 
 //! GET request routes
 categoryRouter.get('/all', getAllCategories)
+categoryRouter.get('/:categoryId', getCategoryById)
 
 //! POST request routes
 categoryRouter.post('/', createCategory);

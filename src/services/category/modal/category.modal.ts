@@ -85,3 +85,32 @@ export const getAllCategoriesModal = async (): Promise<ReturnResponse> => {
         }
     })
 }
+
+export const getCategoryByIdModal = async (cId: string): Promise<ReturnResponse> => {
+    return await new Promise(async (resolve, reject) => {
+        try {
+
+            const aggregateQuery = [
+                {
+                    $match: { _id: objectId(cId), is_deleted: false}
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        name: 1,
+                        is_deleted: 1
+                    }
+                }
+            ]
+            const res = await collections.categoryCollection?.aggregate(aggregateQuery).toArray()
+
+            if(isValidArray(res)){
+                resolve({ success: true, data: res })
+            }
+
+            resolve({ success: false, data: [] })
+        } catch (error: any) {
+            reject(error);
+        }
+    })
+}
