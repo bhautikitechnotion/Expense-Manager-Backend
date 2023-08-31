@@ -90,3 +90,8 @@ interface Token {
 //         }
 //     }
 // }
+
+export const isValidMongoId = (id: string) => {
+    const checkMongoId = new RegExp("^[0-9a-fA-F]{24}$");
+    return checkMongoId.test(id);
+}

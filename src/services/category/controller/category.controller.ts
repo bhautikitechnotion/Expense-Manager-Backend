@@ -1,6 +1,7 @@
 import { resMsg } from '@src/utils/response.messages';
 import { Request, Response } from 'express';
-import { createCategoryModal } from '../modal/category.modal';
+import { createCategoryModal, deleteCategoryModal } from '../modal/category.modal';
+import { isValidMongoId } from '@src/utils';
 
 interface ReturnResponse {
     message: string;
@@ -28,3 +29,27 @@ export const createCategory = async (req: Request, res: Response): Promise<Respo
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 };
+
+export const deleteCategory = async (req: Request, res: Response): Promise<Response<ReturnResponse>> => {
+    try {
+        
+        const { params } = req
+
+        const { categoryId } = params
+
+        if(!isValidMongoId(categoryId)){
+            return res.status(200).send({ message: resMsg.CATEGORY_NOT_VALID, data: [], success: false });
+        }
+        
+        const { update: categoryUpdateSuccess } = await deleteCategoryModal(categoryId)
+        
+        if(categoryUpdateSuccess){
+            return res.status(200).send({ message: resMsg.CATEGORY_DELETED_SUCCESSFUL, data: [], success: true });
+        }
+
+        return res.status(200).send({ message: resMsg.CATEGORY_NOT_FOUND, data: [], success: false });
+    } catch (error) {
+        return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
+        
+    }
+}

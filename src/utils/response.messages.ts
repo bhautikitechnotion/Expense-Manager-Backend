@@ -11,4 +11,7 @@ export const resMsg = {
     // CATEGORY SPECIFIC MESSAGE
     CATEGORY_CREATED_SUCCESSFUL: 'Category created successfully',
     CATEGORY_UPDATED_SUCCESSFUL: 'Category updated successfully',
+    CATEGORY_DELETED_SUCCESSFUL: 'Category deleted successfully',
+    CATEGORY_NOT_FOUND: 'Category not found',
+    CATEGORY_NOT_VALID: 'Category not valid',
 };
