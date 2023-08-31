@@ -15,4 +15,11 @@ export const resMsg = {
     CATEGORY_DELETED_SUCCESSFUL: 'Category deleted successfully',
     CATEGORY_NOT_FOUND: 'Category not found',
     CATEGORY_NOT_VALID: 'Category not valid',
+    MAIN_CATEGORY_NOT_VALID: 'Main category not valid',
+
+    // SUB-CATEGORY SPECIFIC MESSAGE
+    SUB_CATEGORY_CREATED_SUCCESSFUL: 'Sub category created successfully',
+    SUB_CATEGORY_UPDATED_SUCCESSFUL: 'Sub category updated successfully',
+    SUB_CATEGORY_DELETED_SUCCESSFUL: 'Sub category deleted successfully',
+    SUB_CATEGORY_NOT_FOUND: 'Sub category not found',
 };
