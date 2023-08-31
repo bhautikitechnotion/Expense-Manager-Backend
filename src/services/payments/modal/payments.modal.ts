@@ -1,5 +1,5 @@
 import { collections } from '@src/connections/connections';
-import { currentIso, objectId } from '@src/utils';
+import { currentIso, isValidArray, objectId } from '@src/utils';
 import { InsertOneResult } from 'mongodb';
 
 interface ReturnResponse {
@@ -41,3 +41,31 @@ export const addNewPaymentMethodModal = async (body: NewExpense): Promise<Return
         }
     });
 };
+
+export const getPaymentListByUserIdModal = async (userId: string): Promise<ReturnResponse> => {
+    return await new Promise( async (resolve, reject) => {
+        try {
+            const query: any = [
+                {
+                    $match: { user_id: objectId(userId), is_deleted: false}
+                },
+                {
+                    $project: {
+                        _id: 1,
+                        payment_method: 1,
+                    }
+                }
+            ]
+
+            const res = await collections.paymentsCollection?.aggregate(query).toArray()
+
+            if(isValidArray(res)){
+                resolve({ success: true, data: res })
+            }
+            resolve({ success: false, data: [] })
+
+        } catch (error: any) {
+            reject(error);
+        }
+    })
+}
