@@ -2,6 +2,7 @@ import { isValidMongoId } from '@src/utils';
 import { resMsg } from '@src/utils/response.messages';
 import { Request, Response } from 'express';
 import { addNewPaymentMethodModal, getPaymentListByUserIdModal } from '../modal/payments.modal';
+import { logger } from '@src/utils/logger';
 
 interface ReturnResponse {
     message: string;
@@ -29,7 +30,8 @@ export const addNewPaymentMethod = async (req: Request, res: Response): Promise<
         }
 
         return res.status(200).send({ message: resMsg.SOMETHING_WENT_WRONG, success: false, data: [] });
-    } catch (error) {
+    } catch (error: any) {
+        logger.error(`addNewPaymentMethod => ${error.message}`)
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, success: false, data: [] });
     }
 };
@@ -52,7 +54,8 @@ export const getPaymentListByUserId = async (req: Request, res: Response): Promi
         }
 
         return res.status(204).send({ message: resMsg.RECORDS_NOT_FOUND, data: [], success: false });
-    } catch (error) {
+    } catch (error: any) {
+        logger.error(`getPaymentListByUserId => ${error.message}`)
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 }

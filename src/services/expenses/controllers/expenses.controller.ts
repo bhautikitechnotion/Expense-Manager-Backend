@@ -2,6 +2,7 @@ import { isValidMongoId } from '@src/utils';
 import { resMsg } from '@src/utils/response.messages';
 import { Request, Response } from 'express';
 import { createNewExpenseModal, deleteAExpenseModal } from '../modal/expenses.modal';
+import { logger } from '@src/utils/logger';
 
 interface ReturnResponse {
     message: string;
@@ -38,7 +39,8 @@ export const createNewExpense = async (req: Request, res: Response): Promise<Res
         }
 
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, success: false, data: [] });
-    } catch (error) {
+    } catch (error: any) {
+        logger.error(`createNewExpense => ${error.message}`)
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, success: false, data: [] });
     }
 };
@@ -60,7 +62,8 @@ export const deleteAExpense = async (req: Request, res: Response): Promise<Respo
         }
 
         return res.status(200).send({ message: resMsg.SOMETHING_WENT_WRONG, success: false, data: [] });
-    } catch (error) {
+    } catch (error: any) {
+        logger.error(`deleteAExpense => ${error.message}`)
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, success: false, data: [] });
     }
 }

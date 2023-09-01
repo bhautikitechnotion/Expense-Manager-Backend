@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { isRegisteredEmail, userRegisterModal, userUpdateModal } from '../modal/user.modal';
 import { decryptPassword, encryptPassword } from '@src/utils';
 import { resMsg } from '@src/utils/response.messages';
+import { logger } from '@src/utils/logger';
 
 interface ReturnResponse {
     message: string;
@@ -37,6 +38,7 @@ export const userRegister = async (req: Request, res: Response): Promise<Respons
 
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     } catch (err: any) {
+        logger.error(`userRegister => ${err.message}`)
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 };
@@ -63,6 +65,7 @@ export const userUpdate = async (req: Request, res: Response): Promise<Response<
         }
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     } catch (err: any) {
+        logger.error(`userUpdate => ${err.message}`)
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 }
@@ -94,7 +97,8 @@ export const userLogin = async (req: Request, res: Response): Promise<Response<R
 
 
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
-    } catch (error) {
+    } catch (error: any) {
+        logger.error(`userLogin => ${error.message}`)
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 }

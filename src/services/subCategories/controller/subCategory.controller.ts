@@ -7,6 +7,7 @@ import {
     getSubCategoryByIdModal,
     getSubCategoryListByMainCategoryModal,
 } from '../modal/subCategory.modal';
+import { logger } from '@src/utils/logger';
 
 interface ReturnResponse {
     message: string;
@@ -36,7 +37,8 @@ export const createNewSubCategory = async (req: Request, res: Response): Promise
 
 
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
-    } catch (error) {
+    } catch (error: any) {
+        logger.error(`createNewSubCategory => ${error.message}`)
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 };
@@ -53,7 +55,8 @@ export const getAllSubCategories = async (req: Request, res: Response): Promise<
         }
 
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
-    } catch (error) {
+    } catch (error: any) {
+        logger.error(`getAllSubCategories => ${error.message}`)
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 }
@@ -76,7 +79,8 @@ export const getSubCategoryById = async (req: Request, res: Response): Promise<R
 
 
         return res.status(200).send({ message: resMsg.RECORDS_NOT_FOUND, data: [], success: false });
-    } catch (error) {
+    } catch (error: any) {
+        logger.error(`getSubCategoryById => ${error.message}`)
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 }
@@ -98,7 +102,8 @@ export const getSubCategoryListByMainCategory = async (req: Request, res: Respon
         }
 
         return res.status(200).send({ message: resMsg.RECORDS_NOT_FOUND, data: [], success: false });
-    } catch (error) {
+    } catch (error: any) {
+        logger.error(`getSubCategoryListByMainCategory => ${error.message}`)
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 }

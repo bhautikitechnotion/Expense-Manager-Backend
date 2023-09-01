@@ -7,6 +7,7 @@ import {
     getCategoryByIdModal,
 } from '../modal/category.modal';
 import { isValidMongoId } from '@src/utils';
+import { logger } from '@src/utils/logger';
 
 interface ReturnResponse {
     message: string;
@@ -30,7 +31,8 @@ export const createCategory = async (req: Request, res: Response): Promise<Respo
         }
 
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
-    } catch (err: any) {
+    } catch (error: any) {
+        logger.error(`createCategory => ${error.message}`)
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 };
@@ -53,7 +55,8 @@ export const deleteCategory = async (req: Request, res: Response): Promise<Respo
         }
 
         return res.status(200).send({ message: resMsg.CATEGORY_NOT_FOUND, data: [], success: false });
-    } catch (error) {
+    } catch (error: any) {
+        logger.error(`deleteCategory => ${error.message}`)
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
         
     }
@@ -69,7 +72,8 @@ export const getAllCategories = async (req: Request, res: Response): Promise<Res
         }
         
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
-    } catch (error) {
+    } catch (error: any) {
+        logger.error(`getAllCategories => ${error.message}`)
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 }
@@ -91,7 +95,8 @@ export const getCategoryById = async (req: Request, res: Response): Promise<Resp
         }
 
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
-    } catch (error) {
+    } catch (error: any) {
+        logger.error(`getCategoryById => ${error.message}`)
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 }
