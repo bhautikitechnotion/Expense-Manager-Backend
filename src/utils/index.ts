@@ -25,6 +25,7 @@ export const currentIso = () => new Date().toISOString();
 
 export const uri: any = envSettings.uri;
 export const db: any = envSettings.db;
+const userTokenSecretKey: Secret | string | undefined = envSettings.userTokenSecretKey;
 
 export const objectId = (id: string | undefined) => new ObjectId(id);
 
@@ -72,20 +73,20 @@ interface Token {
     isExpiredToken?: boolean;
 }
 
-// export const encryptToken = (token: string, expires: string | number = '1d'): Token => {
-//     try {
-//         const hash = jwt.sign({ token }, userTokenSecretKey as Secret, { expiresIn: expires, issuer: 'adtendees' } as SignOptions);
-//         return {
-//             hashToken: hash,
-//             success: true,
-//         }
-//     } catch (error) {
-//         return {
-//             hashToken: null,
-//             success: false,
-//         }
-//     }
-// }
+export const encryptToken = (token: string, expires: string | number = '1d'): Token => {
+    try {
+        const hash = jwt.sign({ token }, userTokenSecretKey as Secret, { expiresIn: expires, issuer: 'adtendees' } as SignOptions);
+        return {
+            hashToken: hash,
+            success: true,
+        }
+    } catch (error) {
+        return {
+            hashToken: null,
+            success: false,
+        }
+    }
+}
 
 // export const decryptToken = (hashToken: string, options: { userId: string }): Token => {
 //     try {
