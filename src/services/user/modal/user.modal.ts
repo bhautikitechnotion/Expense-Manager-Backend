@@ -43,6 +43,8 @@ export const userRegisterModal = async (body: userRegisterModal): Promise<Return
             const new_body = {
                 ...body,
                 is_deleted: false,
+                type: 2,
+                token: null,
                 createdAt: currentIso(),
                 updatedAt: currentIso()
             }
