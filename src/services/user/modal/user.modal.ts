@@ -1,5 +1,6 @@
 import { collections } from '@src/connections/connections';
-import { isValidObject, currentIso, objectId } from '@src/utils';
+import { isValidObject, currentIso, objectId, isValidArray } from '@src/utils';
+import { logger } from '@src/utils/logger';
 import { InsertOneResult } from 'mongodb';
 
 interface ReturnResponse {
@@ -90,6 +91,55 @@ export const userUpdateModal = async (body: userUpdateModal): Promise<ReturnResp
             
         } catch (error) {
             return reject(error);
+        }
+    })
+}
+
+export const getUserTokenByUserEmail = async (email: string): Promise<ReturnResponse> => {
+    return await new Promise<ReturnResponse>( async (resolve, reject) => {
+        try {
+            
+            const res: any = await collections.userCollection?.findOne(
+                {
+                    email: email, is_deleted: false
+                },
+                {
+                    projection: { full_name: 1, email: 1, token: 1 },
+                }
+            )
+
+            if(isValidArray(res)){
+                const { token } = res
+                if(token) {
+                    return resolve({ success: true, data: [res]})
+                }
+            }
+
+            return resolve({ success: false, data: []})
+
+        } catch (error: any) {
+            logger.error(`getUserTokenByUserEmail => ${error.message}`)
+            return reject({ success: false, data: []})
+        }
+    })
+}
+
+export const updateUserTokenByEmail = async (email: string, options: { token: string}): Promise<ReturnResponse> => {
+    return await new Promise<ReturnResponse>( async (resolve, reject) => {
+        try {
+            
+            const res = await collections.userCollection?.findOneAndUpdate( { email: email, is_deleted: false }, { $set: { token: options.token } }, { returnDocument: "after", projection: { token: 1, _id: 1, full_name: 1 } } )
+
+            const { lastErrorObject, ok, value = {} } = res as UpdateRes;
+
+            if (isValidObject(value)) {
+                return resolve({ update: true, data: [value] });
+            }
+            return resolve({ update: false, data: [] });
+
+        } catch (error: any) {
+            logger.error(`updateUserTokenByEmail => ${error.message}`)
+            reject({ update: false, data: [] })
         }
     })
 }

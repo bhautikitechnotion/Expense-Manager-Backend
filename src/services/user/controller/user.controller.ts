@@ -1,6 +1,12 @@
 import { Request, Response } from 'express';
-import { isRegisteredEmail, userRegisterModal, userUpdateModal } from '../modal/user.modal';
-import { decryptPassword, encryptPassword } from '@src/utils';
+import {
+    getUserTokenByUserEmail,
+    isRegisteredEmail,
+    updateUserTokenByEmail,
+    userRegisterModal,
+    userUpdateModal,
+} from '../modal/user.modal';
+import { decryptPassword, encryptPassword, encryptToken } from '@src/utils';
 import { resMsg } from '@src/utils/response.messages';
 import { logger } from '@src/utils/logger';
 
@@ -92,8 +98,21 @@ export const userLogin = async (req: Request, res: Response): Promise<Response<R
         if(!passwordSuccess){
             return res.send({ message: resMsg.USER_PASSWORD_WRONG, success: false, data: []})
         }
-        console.log("🚀 ~ file: user.controller.ts:87 ~ userLogin ~ passwordSuccess:", passwordSuccess)
 
+        // check already stored token
+        const { success: validTokenSuccess, data: validTokenData } = await getUserTokenByUserEmail(email);
+
+        if(!validTokenSuccess){
+            const expireTokenTime = '1d';
+
+            const { success: tokenSuccess, hashToken } = encryptToken(email, expireTokenTime)
+            if(tokenSuccess){
+                const { update: userTokenUpdate, data: userData } = await updateUserTokenByEmail(email, { token: hashToken})
+                if (userTokenUpdate) {
+                    return res.send({ message: resMsg.USER_LOGIN_SUCCESSFULLY, data: userData, success: true });
+                }
+            }
+        }
 
 
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
