@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { isRegisteredEmail, userRegisterModal, userUpdateModal } from '../modal/user.modal';
-import { encryptPassword } from '@src/utils';
+import { decryptPassword, encryptPassword } from '@src/utils';
 import { resMsg } from '@src/utils/response.messages';
 
 interface ReturnResponse {
@@ -63,6 +63,38 @@ export const userUpdate = async (req: Request, res: Response): Promise<Response<
         }
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     } catch (err: any) {
+        return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
+    }
+}
+
+export const userLogin = async (req: Request, res: Response): Promise<Response<ReturnResponse>> => {
+    try {
+
+        const { body = {}} = req;
+
+        const { email, password } = body;
+
+        // check if email is registered already in the database
+        const { success: registeredEmailSuccess, data } = await isRegisteredEmail(email);
+
+        if(!registeredEmailSuccess){
+            return res.send({ message: resMsg.USER_NOT_REGISTERED, success: false, data: []})
+        }
+
+        const [{ _id: user_id, password: userHashPassword, token }] = data;
+
+        // check if password is correct or not for given email
+        const { success: passwordSuccess } = decryptPassword(password, userHashPassword);
+
+        if(!passwordSuccess){
+            return res.send({ message: resMsg.USER_PASSWORD_WRONG, success: false, data: []})
+        }
+        console.log("🚀 ~ file: user.controller.ts:87 ~ userLogin ~ passwordSuccess:", passwordSuccess)
+
+
+
+        return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
+    } catch (error) {
         return res.status(204).send({ message: resMsg.SOMETHING_WENT_WRONG, data: [], success: false });
     }
 }
