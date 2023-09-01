@@ -50,6 +50,20 @@ export const encryptPassword = (password: string): Password => {
     }
 }
 
+export const decryptPassword = (password: any, hashPassword: string): Password => {
+    try {
+        const validPass = bcrypt.compareSync(password, hashPassword)
+
+        return {
+            success: validPass,
+        }
+    } catch (error) {
+        return {
+            success: false,
+        }
+    }
+}
+
 interface Token {
     token?: string | null | any;
     hashToken?: string | null | any;

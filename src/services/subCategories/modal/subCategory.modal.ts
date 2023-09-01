@@ -1,7 +1,7 @@
 import { CATEGORIES, SUB_CATEGORIES } from '@src/connections/collections.name';
 import { collections } from '@src/connections/connections';
 import { currentIso, isValidArray, objectId } from '@src/utils';
-import { InsertOneResult } from 'mongodb';
+import { Document, InsertOneResult } from 'mongodb';
 
 interface ReturnResponse {
     update?: boolean;
@@ -20,7 +20,7 @@ export const createNewSubCategoryModal = async (body: CreateSubCategory): Promis
             const new_body = {
                 sub_category_name,
                 main_category_id: objectId(main_category_id),
-                is_delete: false,
+                is_deleted: false,
                 createdAt: currentIso(),
                 updatedAt: currentIso(),
             }
@@ -106,32 +106,19 @@ export const getSubCategoryListByMainCategoryModal = async (id: string) => {
 
             const query = [
                 {
-                    $match: { _id: objectId(id), is_deleted: false}
-                },
-                {
-                    $lookup: {
-                        from: SUB_CATEGORIES,
-                        localField: '_id',
-                        foreignField: 'main_category_id',
-                        as: 'sub_category'
-                    }
+                    $match: { main_category_id: objectId(id), is_deleted: false}
                 },
                 {
                     $project:{
                         _id: 1,
-                        name: 1,
-                        sub_category: {
-                            _id: 1,
-                            sub_category_name: 1,
-                            main_category_id: 1,
-
-                        }
+                        sub_category_name: 1,
+                        main_category_id: 1
                     }
                 }
             ]
 
-            const res = await collections.categoryCollection?.aggregate(query).toArray()
-            
+            const res = await collections.subCategoryCollection?.aggregate(query).toArray()
+
             if(isValidArray(res)) {
                 resolve({ success: true, data: res })
             }
