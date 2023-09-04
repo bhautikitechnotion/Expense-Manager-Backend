@@ -124,11 +124,15 @@ export const getUserTokenByUserEmail = async (email: string): Promise<ReturnResp
     })
 }
 
-export const updateUserTokenByEmail = async (email: string, options: { token: string}): Promise<ReturnResponse> => {
+interface TokenTypes{
+    access_token: string,
+    refresh_token: string
+}
+export const updateUserTokenByEmail = async (email: string, options: TokenTypes): Promise<ReturnResponse> => {
     return await new Promise<ReturnResponse>( async (resolve, reject) => {
         try {
             
-            const res = await collections.userCollection?.findOneAndUpdate( { email: email, is_deleted: false }, { $set: { token: options.token } }, { returnDocument: "after", projection: { token: 1, _id: 1, full_name: 1 } } )
+            const res = await collections.userCollection?.findOneAndUpdate( { email: email, is_deleted: false }, { $set: { token: options } }, { returnDocument: "after", projection: { token: 1, _id: 1, full_name: 1 } } )
 
             const { lastErrorObject, ok, value = {} } = res as UpdateRes;
 

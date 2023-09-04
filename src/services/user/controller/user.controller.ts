@@ -105,9 +105,11 @@ export const userLogin = async (req: Request, res: Response): Promise<Response<R
         if(!validTokenSuccess){
             const expireTokenTime = '1d';
 
-            const { success: tokenSuccess, hashToken } = encryptToken(email, expireTokenTime)
-            if(tokenSuccess){
-                const { update: userTokenUpdate, data: userData } = await updateUserTokenByEmail(email, { token: hashToken})
+            const { success: accessTokenSuccess, hashToken: accessHashToken } = encryptToken(email, expireTokenTime)
+            const { success: refreshTokenSuccess, hashToken: refreshHashToken } = encryptToken(email, '5d')
+
+            if(accessTokenSuccess && refreshTokenSuccess ){
+                const { update: userTokenUpdate, data: userData } = await updateUserTokenByEmail(email, { access_token: accessHashToken, refresh_token: refreshHashToken })
                 if (userTokenUpdate) {
                     return res.send({ message: resMsg.USER_LOGIN_SUCCESSFULLY, data: userData, success: true });
                 }
