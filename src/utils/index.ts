@@ -46,7 +46,8 @@ export const encryptPassword = (password: string): Password => {
             hashPassword: hash,
             success: true,
         }
-    } catch (error) {
+    } catch (error: any) {
+        logger.error(`encryptPassword => ${error.message}`)
         return {
             hashPassword: null,
             success: false,
@@ -61,7 +62,8 @@ export const decryptPassword = (password: any, hashPassword: string): Password =
         return {
             success: validPass,
         }
-    } catch (error) {
+    } catch (error: any) {
+        logger.error(`decryptPassword => ${error.message}`)
         return {
             success: false,
         }
@@ -83,7 +85,8 @@ export const encryptToken = (token: string, expires: string | number = '1d'): To
             hashToken: hash,
             success: true,
         }
-    } catch (error) {
+    } catch (error: any) {
+        logger.error(`encryptToken => ${error.message}`)
         return {
             hashToken: null,
             success: false,
