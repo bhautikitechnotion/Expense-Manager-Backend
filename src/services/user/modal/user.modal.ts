@@ -1,7 +1,7 @@
 import { collections } from '@src/connections/connections';
 import { isValidObject, currentIso, objectId, isValidArray } from '@src/utils';
 import { logger } from '@src/utils/logger';
-import { InsertOneResult } from 'mongodb';
+import { InsertOneResult, ModifyResult } from 'mongodb';
 
 interface ReturnResponse {
     update?: boolean;
@@ -144,6 +144,58 @@ export const updateUserTokenByEmail = async (email: string, options: TokenTypes)
         } catch (error: any) {
             logger.error(`updateUserTokenByEmail => ${error.message}`)
             reject({ update: false, data: [] })
+        }
+    })
+}
+
+interface UserLogoutByTokenExpired {
+    userId: string,
+    // token: string
+}
+export const updateUserLogoutByTokenExpired = async (details: UserLogoutByTokenExpired): Promise<ReturnResponse> => {
+    return await new Promise<ReturnResponse>(async (resolve, reject) => {
+        try {
+
+            const { userId } = details;
+
+            const res = await collections.userCollection?.findOneAndUpdate(
+                {_id: objectId(userId), is_deleted: false},
+                [{ $set: { token: { access_token: null } } }],
+                { returnDocument: 'after', projection: { token: 1, email: 1, _id: 1, full_name: 1 } },
+            ) as ModifyResult
+
+            const { lastErrorObject, ok, value = {} } = res as UpdateRes;
+
+            if (isValidObject(value)) {
+                return resolve({ update: true, data: [value] })
+            }
+
+            return resolve({ update: false, data: [] })
+        } catch (error: any) {
+            logger.error(`updateUserLogoutByTokenExpired => ${error.message}`)
+            reject(error)
+        }
+    })
+}
+
+export const isRegisteredEmailAndToken = async (email: string, token: string): Promise<ReturnResponse> => {
+    return await new Promise<ReturnResponse>( async (resolve, reject) => {
+        try {
+
+            const query = { 
+                email: email, 'token.access_token': token, is_deleted: false
+            }
+            
+            const res = await collections.userCollection?.findOne(query)
+
+            if (isValidObject(res)) {
+                return resolve({ success: true, data: [res] });
+            }
+            return resolve({ success: false, data: [] });
+
+        } catch (error: any) {
+            logger.error(`updateUserLogoutByTokenExpired => ${error.message}`)
+            reject(error)
         }
     })
 }

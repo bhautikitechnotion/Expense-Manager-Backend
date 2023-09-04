@@ -3,6 +3,8 @@ import { envSettings } from './env.config';
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload, Secret, SignOptions, TokenExpiredError, VerifyCallback } from 'jsonwebtoken';
 import { isDate } from 'lodash';
+import { updateUserLogoutByTokenExpired } from '@src/services/user/modal/user.modal';
+import { logger } from './logger';
 
 export const isValidObject = (obj: any): boolean => {
     return obj && Object.keys(obj).length > 0;
@@ -89,7 +91,7 @@ export const encryptToken = (token: string, expires: string | number = '1d'): To
     }
 }
 
-export const decryptToken = (hashToken: string): Token => {
+export const decryptToken = async (hashToken: string, options: { userId: string }): Promise<Token> => {
     try {
         const decode = jwt.verify(hashToken, userTokenSecretKey as Secret) as VerifyCallback<JwtPayload>;
         return {
@@ -105,8 +107,12 @@ export const decryptToken = (hashToken: string): Token => {
         // if token expired
         if (isDate(expiredAt)) {
             isExpiredToken = true;
+
+            const { update: tokenUpdateSuccess, data } = await updateUserLogoutByTokenExpired({ userId: options.userId})
+
         }
 
+        logger.error(`decryptToken => ${message}`);
         return {
             token: null,
             success: false,

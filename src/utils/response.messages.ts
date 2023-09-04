@@ -4,6 +4,9 @@ export const resMsg = {
     RECORDS_AVAILABLE: 'Records available',
     RECORDS_NOT_FOUND: 'Records not available',
     SEND_VALID_HEADER: 'Send valid header.',
+    INVALID_TOKEN: 'Invalid token!',
+    INVALID_CONTENT: 'Invalid content!',
+    SEND_VALID_CONTENT: 'Send valid content!',
 
     // USER SPECIFIC MESSAGE
     ALREADY_USER_REGISTERED: 'User already registered with this email',

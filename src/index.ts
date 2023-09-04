@@ -8,6 +8,7 @@ import categoryRouter from './services/category/routes';
 import subCategoryRouter from './services/subCategories/routes';
 import expensesRouter from './services/expenses/routes';
 import paymentsRouter from './services/payments/routes';
+import { isValidHeader } from './middleware/authentication';
 
 if (!envSettings.serverPort) {
     process.exit(1);
@@ -19,6 +20,9 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: false }));
+
+// Custom Middleware
+app.use(isValidHeader)
 
 app.use('/user', userRouter)
 app.use('/category', categoryRouter)
