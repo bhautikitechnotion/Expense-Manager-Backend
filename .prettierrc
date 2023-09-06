@@ -14,7 +14,7 @@
 	"proseWrap": "preserve",
 	"insertPragma": false,
 	"requirePragma": false,
-	"useTabs": true,
+	"useTabs": false,
 	"embeddedLanguageFormatting": "auto",
 	"tabWidth": 4,
 	"endOfLine": "lf"
