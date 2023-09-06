@@ -8,7 +8,11 @@
         "start:prod": "node -r ts-node/register/transpile-only -r tsconfig-paths/register ./dist/index.js",
         "build": "tsc -p tsconfig.prod.json",
         "prepare": "husky install",
-        "formatCode": "npx prettier . --write"
+        "formatCode": "npx prettier . --write",
+        "lint": "lint-staged"
+    },
+    "lint-staged": {
+        "*.ts": "eslint"
     },
     "repository": {
         "type": "git",
@@ -28,6 +32,7 @@
         "@types/jsonwebtoken": "^9.0.2",
         "@types/lodash": "^4.14.197",
         "husky": "^8.0.0",
+        "lint-staged": "^14.0.1",
         "nodemon": "^3.0.1",
         "prettier": "^3.0.2",
         "ts-node": "^10.9.1",
