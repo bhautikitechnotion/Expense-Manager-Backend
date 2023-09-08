@@ -13,7 +13,7 @@ interface CreateSubCategory {
     main_category_id: string;
 }
 export const createNewSubCategoryModal = async (body: CreateSubCategory): Promise<ReturnResponse> => {
-    return await new Promise<ReturnResponse>(async(resolve, reject) => {
+    return await new Promise<ReturnResponse>(async (resolve, reject) => {
         try {
             const { sub_category_name, main_category_id } = body;
 
@@ -23,16 +23,15 @@ export const createNewSubCategoryModal = async (body: CreateSubCategory): Promis
                 is_deleted: false,
                 createdAt: currentIso(),
                 updatedAt: currentIso(),
+            };
+
+            const res = (await collections.subCategoryCollection?.insertOne(new_body, { raw: true })) as InsertOneResult;
+
+            const { acknowledged, insertedId } = res;
+
+            if (acknowledged) {
+                resolve({ success: true, data: [{ _id: insertedId, sub_category_name, main_category_id }] });
             }
-
-            const res = await collections.subCategoryCollection?.insertOne(new_body, { raw: true}) as InsertOneResult
-
-            const { acknowledged, insertedId } = res
-
-            if(acknowledged){
-                resolve({ success: true, data: [{ _id: insertedId, sub_category_name, main_category_id }] })
-            }
-
         } catch (error: any) {
             resolve(error);
         }
@@ -40,93 +39,87 @@ export const createNewSubCategoryModal = async (body: CreateSubCategory): Promis
 };
 
 export const getAllSubCategoriesModal = async (): Promise<ReturnResponse> => {
-    return await new Promise<ReturnResponse>( async (resolve, reject) => {
+    return await new Promise<ReturnResponse>(async (resolve, reject) => {
         try {
-
             const query = [
                 {
                     $match: {
                         is_delete: false,
-                    }
+                    },
                 },
                 {
                     $project: {
                         _id: 1,
                         sub_category_name: 1,
                         main_category_id: 1,
-                        is_delete: 1
-                    }
-                }
-            ]
+                        is_delete: 1,
+                    },
+                },
+            ];
 
-            const res = await collections.subCategoryCollection?.aggregate(query).toArray()
+            const res = await collections.subCategoryCollection?.aggregate(query).toArray();
 
-            if(isValidArray(res)){
-                resolve({ success: true, data: res})
+            if (isValidArray(res)) {
+                resolve({ success: true, data: res });
             }
-            
-            resolve({ success: false, data: []})
+
+            resolve({ success: false, data: [] });
         } catch (error: any) {
             reject(error);
         }
-    })
-}
+    });
+};
 
 export const getSubCategoryByIdModal = async (id: string): Promise<ReturnResponse> => {
-    return await new Promise<ReturnResponse>( async (resolve, reject) => {
+    return await new Promise<ReturnResponse>(async (resolve, reject) => {
         try {
-            
             const query = [
                 {
                     $match: { _id: objectId(id), is_delete: false },
                 },
                 {
-                    $project: { _id: 1, sub_category_name: 1, main_category_id: 1  }
-                }
-            ]
+                    $project: { _id: 1, sub_category_name: 1, main_category_id: 1 },
+                },
+            ];
 
-            const res = await collections.subCategoryCollection?.aggregate(query).toArray()
-            
-            if(isValidArray(res)){
-                resolve({ success: true, data: res })
+            const res = await collections.subCategoryCollection?.aggregate(query).toArray();
+
+            if (isValidArray(res)) {
+                resolve({ success: true, data: res });
             }
-            
-            resolve({ success: false, data: [] })
-            
-        } catch (error: any) {
-         reject(error);   
-        }
 
-    })
-}
+            resolve({ success: false, data: [] });
+        } catch (error: any) {
+            reject(error);
+        }
+    });
+};
 
 export const getSubCategoryListByMainCategoryModal = async (id: string) => {
-    return await new Promise<ReturnResponse>( async (resolve, reject) => {
+    return await new Promise<ReturnResponse>(async (resolve, reject) => {
         try {
-
             const query = [
                 {
-                    $match: { main_category_id: objectId(id), is_deleted: false}
+                    $match: { main_category_id: objectId(id), is_deleted: false },
                 },
                 {
-                    $project:{
+                    $project: {
                         _id: 1,
                         sub_category_name: 1,
-                        main_category_id: 1
-                    }
-                }
-            ]
+                        main_category_id: 1,
+                    },
+                },
+            ];
 
-            const res = await collections.subCategoryCollection?.aggregate(query).toArray()
+            const res = await collections.subCategoryCollection?.aggregate(query).toArray();
 
-            if(isValidArray(res)) {
-                resolve({ success: true, data: res })
+            if (isValidArray(res)) {
+                resolve({ success: true, data: res });
             }
 
-            resolve({ success: false, data: [] })
-
+            resolve({ success: false, data: [] });
         } catch (error: any) {
-            reject(error);   
+            reject(error);
         }
-    })
-}
+    });
+};

@@ -3,10 +3,9 @@ import { createCategory, deleteCategory, getAllCategories, getCategoryById } fro
 
 const categoryRouter = express.Router();
 
-
 //! GET request routes
-categoryRouter.get('/all', getAllCategories)
-categoryRouter.get('/:categoryId', getCategoryById)
+categoryRouter.get('/all', getAllCategories);
+categoryRouter.get('/:categoryId', getCategoryById);
 
 //! POST request routes
 categoryRouter.post('/', createCategory);

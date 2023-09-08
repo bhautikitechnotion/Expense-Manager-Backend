@@ -10,5 +10,4 @@ userRouter.post('/login', userLogin);
 //! PATCH
 userRouter.patch('/:userId', userUpdate);
 
-
 export default userRouter;

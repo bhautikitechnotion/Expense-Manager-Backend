@@ -13,7 +13,7 @@ interface NewExpense {
 }
 
 export const addNewPaymentMethodModal = async (body: NewExpense): Promise<ReturnResponse> => {
-    return await new Promise( async (resolve, reject) => {
+    return await new Promise(async (resolve, reject) => {
         try {
             const { payment_method, user_id } = body;
 
@@ -25,17 +25,15 @@ export const addNewPaymentMethodModal = async (body: NewExpense): Promise<Return
                 updatedAt: currentIso(),
             };
 
-            const res = await collections.paymentsCollection?.insertOne(new_body, { raw: true }) as InsertOneResult;
+            const res = (await collections.paymentsCollection?.insertOne(new_body, { raw: true })) as InsertOneResult;
 
             const { acknowledged, insertedId } = res;
 
-            if(acknowledged) {
-                resolve({ success: true, data: {_id: insertedId, payment_method, user_id  } })
+            if (acknowledged) {
+                resolve({ success: true, data: { _id: insertedId, payment_method, user_id } });
             }
-            
-            resolve({ success: false, data: [] })
-            
 
+            resolve({ success: false, data: [] });
         } catch (error: any) {
             reject(error);
         }
@@ -43,29 +41,28 @@ export const addNewPaymentMethodModal = async (body: NewExpense): Promise<Return
 };
 
 export const getPaymentListByUserIdModal = async (userId: string): Promise<ReturnResponse> => {
-    return await new Promise( async (resolve, reject) => {
+    return await new Promise(async (resolve, reject) => {
         try {
             const query: any = [
                 {
-                    $match: { user_id: objectId(userId), is_deleted: false}
+                    $match: { user_id: objectId(userId), is_deleted: false },
                 },
                 {
                     $project: {
                         _id: 1,
                         payment_method: 1,
-                    }
-                }
-            ]
+                    },
+                },
+            ];
 
-            const res = await collections.paymentsCollection?.aggregate(query).toArray()
+            const res = await collections.paymentsCollection?.aggregate(query).toArray();
 
-            if(isValidArray(res)){
-                resolve({ success: true, data: res })
+            if (isValidArray(res)) {
+                resolve({ success: true, data: res });
             }
-            resolve({ success: false, data: [] })
-
+            resolve({ success: false, data: [] });
         } catch (error: any) {
             reject(error);
         }
-    })
-}
+    });
+};

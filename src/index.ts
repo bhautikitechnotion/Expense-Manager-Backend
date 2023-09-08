@@ -22,16 +22,16 @@ app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: false }));
 
 // Custom Middleware
-app.use(isValidHeader)
+app.use(isValidHeader);
 
-app.use('/user', userRouter)
-app.use('/category', categoryRouter)
-app.use('/sub-category', subCategoryRouter)
-app.use('/expenses', expensesRouter)
-app.use('/payments', paymentsRouter)
+app.use('/user', userRouter);
+app.use('/category', categoryRouter);
+app.use('/sub-category', subCategoryRouter);
+app.use('/expenses', expensesRouter);
+app.use('/payments', paymentsRouter);
 
 app.listen(envSettings.serverPort, async () => {
-    console.log(`Connecting to server at port ${envSettings.serverPort}`)
+    console.log(`Connecting to server at port ${envSettings.serverPort}`);
 
-    await connectToDb()
-})
+    await connectToDb();
+});

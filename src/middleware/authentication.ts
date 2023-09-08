@@ -14,17 +14,17 @@ function unRestrictedUrls(url: string): boolean {
     for (let u of urls) {
         const each_url = new UrlPattern(u);
 
-        if(isObjectLike(each_url.match(url))){
+        if (isObjectLike(each_url.match(url))) {
             status = true;
             break;
         }
 
-        if(status){
+        if (status) {
             break;
         }
     }
 
-    if(status){
+    if (status) {
         return true;
     }
 
@@ -38,37 +38,35 @@ async function isValidHeader(req: Request, res: Response, next: NextFunction): P
     const { url = '' }: { url: string } = req;
 
     try {
-
-        if(unRestrictedUrls(url)){
+        if (unRestrictedUrls(url)) {
             return next();
         }
 
-        if(!isString(accessToken) || !isString(authenticatedUserId)){
+        if (!isString(accessToken) || !isString(authenticatedUserId)) {
             return res.status(401).send({ message: resMsg.SEND_VALID_HEADER, success: false, data: [] });
         }
 
         // check if token is valid or not
-        const { decodeToken, success, isExpiredToken } = await decryptToken(accessToken, { userId: authenticatedUserId })
+        const { decodeToken, success, isExpiredToken } = await decryptToken(accessToken, { userId: authenticatedUserId });
 
-        if(!success || isExpiredToken){
+        if (!success || isExpiredToken) {
             return res.status(401).send({ message: resMsg.TOKEN_EXPIRED_ERROR, success: false, data: [] });
         }
 
         // verify user identity
-        if(success && !isExpiredToken){
-            const { success: emailTokenSuccess } = await isRegisteredEmailAndToken(decodeToken.token, accessToken )
+        if (success && !isExpiredToken) {
+            const { success: emailTokenSuccess } = await isRegisteredEmailAndToken(decodeToken.token, accessToken);
 
-            if(emailTokenSuccess){
-                return next()
+            if (emailTokenSuccess) {
+                return next();
             }
         }
 
         throw new Error('invalid token');
-
     } catch (error: any) {
         logger.error(`isValidHeader => ${error.message}`);
         return res.status(401).send({ message: resMsg.INVALID_TOKEN, success: false, data: [] });
     }
-};
+}
 
 export { isValidHeader };

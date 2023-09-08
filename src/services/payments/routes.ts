@@ -4,7 +4,7 @@ import { addNewPaymentMethod, getPaymentListByUserId } from './controller/paymen
 const paymentsRouter = express.Router();
 
 //! GET request routes
-paymentsRouter.get('/payment_list/:user_id', getPaymentListByUserId)
+paymentsRouter.get('/payment_list/:user_id', getPaymentListByUserId);
 
 //! POST request routes
 paymentsRouter.post('/', addNewPaymentMethod);
