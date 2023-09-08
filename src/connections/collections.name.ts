@@ -7,3 +7,5 @@ export const SUB_CATEGORIES = '02_sub_categories';
 export const EXPENSES = '03_expenses';
 
 export const PAYMENTS = '04_payments';
+
+export const SESSIONS = '06_sessions'

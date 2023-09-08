@@ -31,6 +31,7 @@ export const currentIso = () => new Date().toISOString();
 
 export const uri: any = envSettings.uri;
 export const db: any = envSettings.db;
+export const sessionSecretKey: any = envSettings.sessionSecretKey
 const userTokenSecretKey: Secret | string | undefined = envSettings.userTokenSecretKey;
 
 export const objectId = (id: string | undefined) => new ObjectId(id);

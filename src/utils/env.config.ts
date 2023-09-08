@@ -6,6 +6,7 @@ interface Config {
     uri: string | undefined;
     db: string | undefined;
     userTokenSecretKey: string | undefined;
+    sessionSecretKey: string | undefined;
 }
 
 const envSettings: Config = {
@@ -13,6 +14,8 @@ const envSettings: Config = {
     uri: process.env.MONGO_CONNECTION_URL,
     db: process.env.MONGO_DB,
     userTokenSecretKey: process.env.USER_TOKEN_SECRET_KEY,
+    sessionSecretKey: process.env.SESSION_SECRET,
+
 };
 
 export { envSettings };

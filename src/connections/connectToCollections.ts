@@ -9,6 +9,7 @@ export const ConnectToCollections = async (dataBase: Db) => {
     const subCategoryCollection: Collection = dataBase.collection(SUB_CATEGORIES);
     const expensesCollection: Collection = dataBase.collection(EXPENSES);
     const paymentsCollection: Collection = dataBase.collection(PAYMENTS);
+    const sessionsCollection: Collection = dataBase.collection(PAYMENTS);
 
     collections.userCollection = userCollection;
     collections.usersTypesCollection = usersTypesCollection;
@@ -16,4 +17,5 @@ export const ConnectToCollections = async (dataBase: Db) => {
     collections.subCategoryCollection = subCategoryCollection;
     collections.expensesCollection = expensesCollection;
     collections.paymentsCollection = paymentsCollection;
+    collections.sessionsCollection = sessionsCollection;
 };

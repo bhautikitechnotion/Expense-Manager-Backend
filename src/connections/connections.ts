@@ -7,4 +7,5 @@ export const collections: {
     subCategoryCollection?: Collection;
     expensesCollection?: Collection;
     paymentsCollection?: Collection;
+    sessionsCollection?: Collection;
 } = {};
