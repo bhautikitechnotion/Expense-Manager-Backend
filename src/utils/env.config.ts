@@ -15,7 +15,6 @@ const envSettings: Config = {
     db: process.env.MONGO_DB,
     userTokenSecretKey: process.env.USER_TOKEN_SECRET_KEY,
     sessionSecretKey: process.env.SESSION_SECRET,
-
 };
 
 export { envSettings };

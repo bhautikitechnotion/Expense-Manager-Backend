@@ -10,9 +10,9 @@ import expensesRouter from './services/expenses/routes';
 import paymentsRouter from './services/payments/routes';
 import { isValidHeader } from './middleware/authentication';
 import { logger } from './utils/logger';
-import session from 'express-session'
+import session from 'express-session';
 import { sessionSecretKey, uri } from './utils';
-import MongoDBStore from 'connect-mongodb-session'
+import MongoDBStore from 'connect-mongodb-session';
 import { SESSIONS } from './connections/collections.name';
 
 if (!envSettings.serverPort) {
@@ -21,25 +21,26 @@ if (!envSettings.serverPort) {
 
 const app: Application = express();
 
-const sessionStore = MongoDBStore(session)
+const sessionStore = MongoDBStore(session);
 
 const store = new sessionStore({
     uri,
-    collection: SESSIONS
-})
-
+    collection: SESSIONS,
+});
 
 app.use(cors());
 app.use(helmet());
 app.use(express.json({ limit: '5mb' }));
 app.use(express.urlencoded({ extended: false }));
-app.use(session({
-    secret: sessionSecretKey,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { httpOnly: true, maxAge: 86400000, secure: true },
-    store: store
-}))
+app.use(
+    session({
+        secret: sessionSecretKey,
+        resave: false,
+        saveUninitialized: true,
+        cookie: { httpOnly: true, maxAge: 86400000, secure: true },
+        store: store,
+    }),
+);
 
 // Custom Middleware
 app.use(isValidHeader);

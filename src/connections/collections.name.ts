@@ -8,4 +8,4 @@ export const EXPENSES = '03_expenses';
 
 export const PAYMENTS = '04_payments';
 
-export const SESSIONS = '06_sessions'
+export const SESSIONS = '06_sessions';
