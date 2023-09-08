@@ -35,82 +35,81 @@ export const createCategoryModal = async (body: { name: string }): Promise<Retur
     });
 };
 
-
 export const deleteCategoryModal = async (categoryId: string): Promise<ReturnResponse> => {
     return await new Promise(async (resolve, reject) => {
         try {
-            
-            const res = await collections.categoryCollection?.findOneAndUpdate({_id: objectId(categoryId), is_deleted: false}, { $set: { is_deleted: true }}, { returnDocument: 'after' } ) as ModifyResult
+            const res = (await collections.categoryCollection?.findOneAndUpdate(
+                { _id: objectId(categoryId), is_deleted: false },
+                { $set: { is_deleted: true } },
+                { returnDocument: 'after' },
+            )) as ModifyResult;
 
             const { lastErrorObject, value, ok } = res;
 
-            if(isValidObject(value)){
-                resolve({ update: true, data: value})
+            if (isValidObject(value)) {
+                resolve({ update: true, data: value });
             }
 
-            resolve({ update: false, data: []})
-
+            resolve({ update: false, data: [] });
         } catch (error: any) {
             reject(error);
         }
-    })
-}
+    });
+};
 
 export const getAllCategoriesModal = async (): Promise<ReturnResponse> => {
     return await new Promise(async (resolve, reject) => {
         try {
-
             const aggregateQuery = [
                 {
-                    $match: { is_deleted: false }
+                    $match: { is_deleted: false },
                 },
                 {
                     $project: {
                         _id: 1,
                         name: 1,
-                        is_deleted: 1
-                    }
-                }
-            ]
+                        is_deleted: 1,
+                    },
+                },
+            ];
 
-            const res = await collections.categoryCollection?.aggregate(aggregateQuery).toArray()
+            const res = await collections.categoryCollection?.aggregate(aggregateQuery).toArray();
 
-            if(isValidArray(res)){
-                resolve({ success: true, data: res})
+            if (isValidArray(res)) {
+                resolve({ success: true, data: res });
             }
 
-            resolve({ success: false, data: []})
+            resolve({ success: false, data: [] });
         } catch (error: any) {
             reject(error);
         }
-    })
-}
+    });
+};
 
 export const getCategoryByIdModal = async (cId: string): Promise<ReturnResponse> => {
     return await new Promise(async (resolve, reject) => {
         try {
-
             const aggregateQuery = [
                 {
-                    $match: { _id: objectId(cId), is_deleted: false}
+                    $match: { _id: objectId(cId), is_deleted: false },
                 },
                 {
                     $project: {
                         _id: 1,
                         name: 1,
-                        is_deleted: 1
-                    }
-                }
-            ]
-            const res = await collections.categoryCollection?.aggregate(aggregateQuery).toArray()
+                        is_deleted: 1,
+                    },
+                },
+            ];
+            const res = await collections.categoryCollection?.aggregate(aggregateQuery).toArray();
 
-            if(isValidArray(res)){
-                resolve({ success: true, data: res })
+            if (isValidArray(res)) {
+                resolve({ success: true, data: res });
             }
 
-            resolve({ success: false, data: [] })
+            resolve({ success: false, data: [] });
         } catch (error: any) {
             reject(error);
         }
-    })
-}
+    });
+};

@@ -2,6 +2,9 @@ import { ObjectId } from 'mongodb';
 import { envSettings } from './env.config';
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload, Secret, SignOptions, TokenExpiredError, VerifyCallback } from 'jsonwebtoken';
+import { isDate } from 'lodash';
+import { updateUserLogoutByTokenExpired } from '@src/services/user/modal/user.modal';
+import { logger } from './logger';
 
 export const isValidObject = (obj: any): boolean => {
     return obj && Object.keys(obj).length > 0;
@@ -9,22 +12,26 @@ export const isValidObject = (obj: any): boolean => {
 
 export const isValidArray = (arr: any): boolean => {
     return arr && Array.isArray(arr) && arr.length > 0;
-}
+};
 
 export const isValidURL = (url: any): boolean => {
-    var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-        '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+    var pattern = new RegExp(
+        '^(https?:\\/\\/)?' + // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+            '(\\#[-a-z\\d_]*)?$',
+        'i',
+    ); // fragment locator
     return !!pattern.test(url);
-}
+};
 
 export const currentIso = () => new Date().toISOString();
 
 export const uri: any = envSettings.uri;
 export const db: any = envSettings.db;
+const userTokenSecretKey: Secret | string | undefined = envSettings.userTokenSecretKey;
 
 export const objectId = (id: string | undefined) => new ObjectId(id);
 
@@ -36,33 +43,35 @@ interface Password {
 
 export const encryptPassword = (password: string): Password => {
     try {
-        const hash = bcrypt.hashSync(password, 10)
+        const hash = bcrypt.hashSync(password, 10);
 
         return {
             hashPassword: hash,
             success: true,
-        }
-    } catch (error) {
+        };
+    } catch (error: any) {
+        logger.error(`encryptPassword => ${error.message}`);
         return {
             hashPassword: null,
             success: false,
-        }
+        };
     }
-}
+};
 
 export const decryptPassword = (password: any, hashPassword: string): Password => {
     try {
-        const validPass = bcrypt.compareSync(password, hashPassword)
+        const validPass = bcrypt.compareSync(password, hashPassword);
 
         return {
             success: validPass,
-        }
-    } catch (error) {
+        };
+    } catch (error: any) {
+        logger.error(`decryptPassword => ${error.message}`);
         return {
             success: false,
-        }
+        };
     }
-}
+};
 
 interface Token {
     token?: string | null | any;
@@ -72,54 +81,52 @@ interface Token {
     isExpiredToken?: boolean;
 }
 
-// export const encryptToken = (token: string, expires: string | number = '1d'): Token => {
-//     try {
-//         const hash = jwt.sign({ token }, userTokenSecretKey as Secret, { expiresIn: expires, issuer: 'adtendees' } as SignOptions);
-//         return {
-//             hashToken: hash,
-//             success: true,
-//         }
-//     } catch (error) {
-//         return {
-//             hashToken: null,
-//             success: false,
-//         }
-//     }
-// }
+export const encryptToken = (token: string, expires: string | number = '1d'): Token => {
+    try {
+        const hash = jwt.sign({ token }, userTokenSecretKey as Secret, { expiresIn: expires, issuer: 'expenseManager' } as SignOptions);
+        return {
+            hashToken: hash,
+            success: true,
+        };
+    } catch (error: any) {
+        logger.error(`encryptToken => ${error.message}`);
+        return {
+            hashToken: null,
+            success: false,
+        };
+    }
+};
 
-// export const decryptToken = (hashToken: string, options: { userId: string }): Token => {
-//     try {
-//         const decode = jwt.verify(hashToken, userTokenSecretKey as Secret) as VerifyCallback<JwtPayload>;
-//         return {
-//             decodeToken: decode,
-//             success: true,
-//             isExpiredToken: false
-//         };
-//     } catch (error) {
-//         const { expiredAt, message, name, inner } = (error as TokenExpiredError);
-//         let isExpiredToken: boolean | undefined = false;
+export const decryptToken = async (hashToken: string, options: { userId: string }): Promise<Token> => {
+    try {
+        const decode = jwt.verify(hashToken, userTokenSecretKey as Secret) as VerifyCallback<JwtPayload>;
+        return {
+            decodeToken: decode,
+            success: true,
+            isExpiredToken: false,
+        };
+    } catch (error) {
+        const { expiredAt, message, name, inner } = error as TokenExpiredError;
 
-//         // if token expired
-//         if (isDate(expiredAt)) {
-//             isExpiredToken = true;
+        let isExpiredToken: boolean | undefined = false;
 
-//             const { userId } = options;
+        // if token expired
+        if (isDate(expiredAt)) {
+            isExpiredToken = true;
 
-//             // remove active device -1, sign out_time,if hashToken avail then removed
-//             join(updateUserLogoutByTokenExpired({ userId: userId, token: hashToken }), (res) => {
-//                 const { update, data } = res;
-//             });
-//         }
+            const { update: tokenUpdateSuccess, data } = await updateUserLogoutByTokenExpired({ userId: options.userId });
+        }
 
-//         return {
-//             token: null,
-//             success: false,
-//             isExpiredToken
-//         }
-//     }
-// }
+        logger.error(`decryptToken => ${message}`);
+        return {
+            token: null,
+            success: false,
+            isExpiredToken,
+        };
+    }
+};
 
 export const isValidMongoId = (id: string) => {
-    const checkMongoId = new RegExp("^[0-9a-fA-F]{24}$");
+    const checkMongoId = new RegExp('^[0-9a-fA-F]{24}$');
     return checkMongoId.test(id);
-}
+};

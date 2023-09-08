@@ -5,7 +5,7 @@ import { ConnectToCollections } from './connectToCollections';
 const dbClient = new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-} as MongoClientOptions );
+} as MongoClientOptions);
 
 export async function connectToDb(): Promise<void> {
     try {
@@ -13,7 +13,7 @@ export async function connectToDb(): Promise<void> {
 
         const dataBase: Db = dbClient.db(db);
 
-        await ConnectToCollections(dataBase)
+        await ConnectToCollections(dataBase);
     } catch (error) {
         console.log((error as MongoServerError).message);
     }
