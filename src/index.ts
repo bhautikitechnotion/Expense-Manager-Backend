@@ -9,6 +9,7 @@ import subCategoryRouter from './services/subCategories/routes';
 import expensesRouter from './services/expenses/routes';
 import paymentsRouter from './services/payments/routes';
 import { isValidHeader } from './middleware/authentication';
+import { logger } from './utils/logger';
 
 if (!envSettings.serverPort) {
     process.exit(1);
@@ -31,7 +32,8 @@ app.use('/expenses', expensesRouter);
 app.use('/payments', paymentsRouter);
 
 app.listen(envSettings.serverPort, async () => {
-    console.log(`Connecting to server at port ${envSettings.serverPort}`);
+    logger.info(`Connected to port:${envSettings.serverPort}`);
 
     await connectToDb();
+    console.log(`Server connected successfully to http://localhost:${envSettings.serverPort}`);
 });
