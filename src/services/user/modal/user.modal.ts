@@ -53,7 +53,10 @@ export const userRegisterModal = async (body: userRegisterModal): Promise<Return
             const { acknowledged, insertedId } = res;
 
             if (acknowledged) {
-                return resolve({ success: true, data: [{ full_name: new_body.full_name, email: new_body.email, _id: insertedId }] });
+                return resolve({
+                    success: true,
+                    data: [{ full_name: new_body.full_name, email: new_body.email, _id: insertedId }],
+                });
             }
 
             return resolve({ success: false, data: [] });
@@ -159,10 +162,14 @@ export const updateUserLogoutByTokenExpired = async (details: UserLogoutByTokenE
         try {
             const { userId } = details;
 
-            const res = (await collections.userCollection?.findOneAndUpdate({ _id: objectId(userId), is_deleted: false }, [{ $set: { token: { access_token: null } } }], {
-                returnDocument: 'after',
-                projection: { token: 1, email: 1, _id: 1, full_name: 1 },
-            })) as ModifyResult;
+            const res = (await collections.userCollection?.findOneAndUpdate(
+                { _id: objectId(userId), is_deleted: false },
+                [{ $set: { token: { access_token: null } } }],
+                {
+                    returnDocument: 'after',
+                    projection: { token: 1, email: 1, _id: 1, full_name: 1 },
+                },
+            )) as ModifyResult;
 
             const { lastErrorObject, ok, value = {} } = res as UpdateRes;
 

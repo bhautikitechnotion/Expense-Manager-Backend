@@ -47,7 +47,9 @@ async function isValidHeader(req: Request, res: Response, next: NextFunction): P
         }
 
         // check if token is valid or not
-        const { decodeToken, success, isExpiredToken } = await decryptToken(accessToken, { userId: authenticatedUserId });
+        const { decodeToken, success, isExpiredToken } = await decryptToken(accessToken, {
+            userId: authenticatedUserId,
+        });
 
         if (!success || isExpiredToken) {
             return res.status(401).send({ message: resMsg.TOKEN_EXPIRED_ERROR, success: false, data: [] });

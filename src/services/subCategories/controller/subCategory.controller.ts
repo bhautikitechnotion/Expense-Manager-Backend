@@ -1,7 +1,12 @@
 import { isValidMongoId } from '@src/utils';
 import { resMsg } from '@src/utils/response.messages';
 import { Request, Response } from 'express';
-import { createNewSubCategoryModal, getAllSubCategoriesModal, getSubCategoryByIdModal, getSubCategoryListByMainCategoryModal } from '../modal/subCategory.modal';
+import {
+    createNewSubCategoryModal,
+    getAllSubCategoriesModal,
+    getSubCategoryByIdModal,
+    getSubCategoryListByMainCategoryModal,
+} from '../modal/subCategory.modal';
 import { logger } from '@src/utils/logger';
 
 interface ReturnResponse {
@@ -20,7 +25,10 @@ export const createNewSubCategory = async (req: Request, res: Response): Promise
             return res.status(200).send({ message: resMsg.MAIN_CATEGORY_NOT_VALID, data: [], success: false });
         }
 
-        const new_body: { sub_category_name: string; main_category_id: string } = { sub_category_name, main_category_id };
+        const new_body: { sub_category_name: string; main_category_id: string } = {
+            sub_category_name,
+            main_category_id,
+        };
 
         const { success: createSubCategorySuccess, data: createSubCategoryData } = await createNewSubCategoryModal(new_body);
 

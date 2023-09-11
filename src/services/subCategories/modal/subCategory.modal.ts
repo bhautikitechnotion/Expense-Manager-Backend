@@ -25,7 +25,9 @@ export const createNewSubCategoryModal = async (body: CreateSubCategory): Promis
                 updatedAt: currentIso(),
             };
 
-            const res = (await collections.subCategoryCollection?.insertOne(new_body, { raw: true })) as InsertOneResult;
+            const res = (await collections.subCategoryCollection?.insertOne(new_body, {
+                raw: true,
+            })) as InsertOneResult;
 
             const { acknowledged, insertedId } = res;
 

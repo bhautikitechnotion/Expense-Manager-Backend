@@ -29,7 +29,15 @@ export const createNewExpense = async (req: Request, res: Response): Promise<Res
             return res.status(200).send({ message: resMsg.SOMETHING_WENT_WRONG, success: false, data: [] });
         }
 
-        const new_body: CreateNewExpense = { amount, expense_date, payment_method, user_id, description, main_category, sub_category };
+        const new_body: CreateNewExpense = {
+            amount,
+            expense_date,
+            payment_method,
+            user_id,
+            description,
+            main_category,
+            sub_category,
+        };
 
         const { success, data } = await createNewExpenseModal(new_body);
 

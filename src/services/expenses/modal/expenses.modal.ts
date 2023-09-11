@@ -39,7 +39,17 @@ export const createNewExpenseModal = async (body: CreateNewExpense): Promise<Ret
             const { acknowledged, insertedId } = res;
 
             if (acknowledged) {
-                resolve({ success: true, data: [{ _id: insertedId, amount: new_body.amount, expense_date: new_body.expense_date, description: new_body.description }] });
+                resolve({
+                    success: true,
+                    data: [
+                        {
+                            _id: insertedId,
+                            amount: new_body.amount,
+                            expense_date: new_body.expense_date,
+                            description: new_body.description,
+                        },
+                    ],
+                });
             }
 
             resolve({ success: false, data: [] });

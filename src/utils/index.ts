@@ -114,7 +114,9 @@ export const decryptToken = async (hashToken: string, options: { userId: string 
         if (isDate(expiredAt)) {
             isExpiredToken = true;
 
-            const { update: tokenUpdateSuccess, data } = await updateUserLogoutByTokenExpired({ userId: options.userId });
+            const { update: tokenUpdateSuccess, data } = await updateUserLogoutByTokenExpired({
+                userId: options.userId,
+            });
         }
 
         logger.error(`decryptToken => ${message}`);
