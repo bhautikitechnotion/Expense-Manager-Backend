@@ -57,7 +57,7 @@ async function isValidHeader(req: Request, res: Response, next: NextFunction): P
 
         // verify user identity
         if (success && !isExpiredToken) {
-            const { success: emailTokenSuccess } = await isRegisteredEmailAndToken(decodeToken.token, accessToken);
+            const { success: emailTokenSuccess } = await isRegisteredEmailAndToken(decodeToken.token, accessToken, authenticatedUserId);
 
             if (emailTokenSuccess) {
                 return next();

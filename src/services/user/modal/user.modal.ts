@@ -185,12 +185,13 @@ export const updateUserLogoutByTokenExpired = async (details: UserLogoutByTokenE
     });
 };
 
-export const isRegisteredEmailAndToken = async (email: string, token: string): Promise<ReturnResponse> => {
+export const isRegisteredEmailAndToken = async (email: string, token: string, userId: string): Promise<ReturnResponse> => {
     return await new Promise<ReturnResponse>(async (resolve, reject) => {
         try {
             const query = {
                 email: email,
                 'token.access_token': token,
+                _id: objectId(userId),
                 is_deleted: false,
             };
 
